@@ -1,10 +1,10 @@
 {
-  "name": "genesis-living-worlds",
-  "version": "0.3.0",
-  "private": true,
-  "description": "Deterministic artificial-life ecosystem with an interactive observatory UI.",
+  "name": "genesis-underdeep",
+  "version": "1.4.0",
+  "private": false,
+  "description": "Vast artificial-life ecology with a shared pixel-art renderer, original procedural creatures, and redistributable public assets.",
   "scripts": {
-    "test": "node tests/sim.test.js",
+    "test": "node tests/sim.test.js && node tests/perf-assets.test.js && node tests/mossling-character.test.js && node tests/vineback-character.test.js && node tests/pixel-style.test.js",
     "serve": "python -m http.server 8080"
   }
 }
