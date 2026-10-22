@@ -1,12 +1,12 @@
 # Genesis — Living Worlds
 
-Genesis is a no-build artificial-life sandbox: seed a world, watch a population adapt through selection and mutation, intervene with god tools, and inspect a tiny neural policy while it acts. The model is deliberately small and local rather than LLM-driven.
+Genesis is a no-build artificial-life sandbox. Seed a world, watch populations adapt through selection and mutation, intervene with god tools, and inspect a tiny neural policy while it acts. This is an experiment in emergence, not an LLM-driven simulation.
 
 ## Run it
 
-Open `index.html` in a modern browser. No install, network, or build step is required.
+Open `index.html` in a modern browser. No build step or dependencies are required.
 
-For local testing:
+Run the deterministic core tests with Node.js:
 
 ```bash
 npm test
@@ -17,32 +17,32 @@ Then open `http://localhost:8080`.
 
 ## Controls
 
-- **Pause / Resume / Step:** control model time.
-- **Species / Lineage / Energy / Food:** switch map overlays.
-- **Inspect agent:** click near an agent to inspect its live neural activations.
-- **Paint food, Drought, Bloom, Meteor:** intervene in a local region; drag to paint.
-- **Spawn herbivores / predators:** inject agents into the ecosystem.
-- **Natural events:** enable/disable droughts, blooms, and meteor impacts.
-- **Export world:** download a JSON snapshot for analysis. This is data capture, not yet a fully implemented replay/restore interface.
-- **Seed:** make a repeatable initial world.
+- Pause / Resume / Step controls model time.
+- Species / Lineage / Energy / Food switches map overlays.
+- Inspect agent selects a nearby creature and visualizes neural activations.
+- Paint food, Drought, Bloom and Meteor alter a local region; drag to paint.
+- Spawn herbivores / predators inject new agents.
+- Natural events toggles drought, bloom and meteor events.
+- Export world downloads a JSON snapshot for offline analysis. Restore, rewind and branched replay are not implemented yet.
+- Seed creates reproducible initial terrain and population.
 
 ## Architecture
 
-- `sim.js`: deterministic simulation core; typed-array, struct-of-arrays storage; no DOM dependencies.
-- `index.html`: visualization, controls, time series, agent inspector, event stream.
-- `tests/sim.test.js`: Node-based invariant and seeded-determinism checks.
+- `sim.js`: simulation core, typed-array/struct-of-arrays agent state, deterministic random streams; no DOM dependencies.
+- `index.html`: interactive observatory, map, charts, controls, event log and live agent inspector.
+- `tests/sim.test.js`: deterministic-run, random-stream isolation and invariant tests.
 
-The core uses isolated random streams for ordinary agent/genome dynamics, world events, initial population, and direct player actions. This prevents manual tools from consuming the RNG stream used for genetics or natural events. Core rules are still evolving, so this build stays in JavaScript rather than locking them into a premature WASM port.
+Separate random streams are used for initial agents, mutation/genetics, natural world events and manual player actions. The engine remains in JavaScript while the core rules stabilize; the code is deliberately organized for a later Rust/WASM port.
 
 ## Current scope and known limits
 
-- Agents use a small 16-8-4 MLP with 172 weights, mutation, food foraging, predation, and reproduction.
-- Population cap is 3,000.
-- The inspector's nearest-agent search still scans live agents. A full spatial hash is future optimization work.
-- The neural inputs include neighbor food/prey, nearby predator pressure, energy, local resources, bias, and season. This is an experimental artificial-life toy, not a biologically accurate ecosystem.
-- Export contains a snapshot for offline inspection; restore, rewind, and branched replay are not implemented yet.
-- Rust/WASM is intentionally deferred until the rules and tests stabilize.
+- 16-8-4 MLP with 172 weights per creature; offspring inherit weights with mutation.
+- Herbivores forage, predators hunt, agents spend energy, reproduce and die.
+- Population cap: 3,000.
+- The nearest-agent inspector currently scans live agents; a spatial hash is a future performance upgrade.
+- This is an experimental toy model, not a biologically accurate ecosystem.
+- Snapshots can be exported, but restore/rewind/replay are not yet implemented.
 
 ## Tests
 
-`npm test` checks fixed-seed repeatability with player actions, verifies RNG-stream isolation for manual tools, and exercises seeds 1–20 for finite agent state and population invariants.
+`npm test` verifies seeded repeatability with manual actions, isolates random streams from ordinary food-paint tools, and smoke-tests 20 seeds for finite state and population bounds.
