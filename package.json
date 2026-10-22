@@ -1,0 +1,10 @@
+{
+  "name": "genesis-living-worlds",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Deterministic artificial-life ecosystem with an interactive observatory UI.",
+  "scripts": {
+    "test": "node tests/sim.test.js",
+    "serve": "python -m http.server 8080"
+  }
+}
